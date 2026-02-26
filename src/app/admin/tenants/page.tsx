@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth-context";
 import {
-    Plus, Trash2, Edit3, Check, X, Users, Globe, Shield,
+    Plus, Trash2, Edit3, Users, Globe, Shield,
     Building2, Loader2, Key, AlertTriangle,
 } from "lucide-react";
 

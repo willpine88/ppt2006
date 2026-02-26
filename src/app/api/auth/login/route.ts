@@ -9,11 +9,28 @@ const supabase = createClient(
 export async function POST(request: NextRequest) {
     try {
         const { email, password } = await request.json();
+        const ip = request.headers.get('x-forwarded-for') || 'unknown';
 
         if (!email || !password) {
             return NextResponse.json(
                 { success: false, message: "Vui lòng nhập email và mật khẩu" },
                 { status: 400 }
+            );
+        }
+
+        // Rate limit: max 5 failed attempts in 15 min
+        const fifteenMinAgo = new Date(Date.now() - 15 * 60 * 1000).toISOString();
+        const { count: failedCount } = await supabase
+            .from('login_attempts')
+            .select('*', { count: 'exact', head: true })
+            .eq('email', email)
+            .eq('success', false)
+            .gte('created_at', fifteenMinAgo);
+
+        if ((failedCount || 0) >= 5) {
+            return NextResponse.json(
+                { success: false, message: "Quá nhiều lần thử. Vui lòng đợi 15 phút." },
+                { status: 429 }
             );
         }
 
@@ -63,6 +80,7 @@ export async function POST(request: NextRequest) {
                     return response;
                 }
 
+                await supabase.from('login_attempts').insert({ email, ip_address: ip, success: false });
                 return NextResponse.json(
                     { success: false, message: "Sai email hoặc mật khẩu" },
                     { status: 401 }
@@ -110,11 +128,11 @@ export async function POST(request: NextRequest) {
                 tenantName = tenant?.name || '';
             }
 
-            // Update last_login
-            await supabase
-                .from('users')
-                .update({ last_login: new Date().toISOString() })
-                .eq('id', dbUser.id);
+            // Update last_login + log success
+            await Promise.all([
+                supabase.from('users').update({ last_login: new Date().toISOString() }).eq('id', dbUser.id),
+                supabase.from('login_attempts').insert({ email, ip_address: ip, success: true }),
+            ]);
 
             const tokenData = {
                 userId: dbUser.id,

@@ -7,7 +7,7 @@ const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-export async function GET(request: NextRequest) {
+export async function GET() {
     const license = getLicense();
     const { count } = await supabase
         .from('tenants')
