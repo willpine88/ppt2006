@@ -1,25 +1,138 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 
-// Simple admin credentials - set these in .env.local
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@10xsolution.com";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "10xAdmin@2026";
+const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function POST(request: NextRequest) {
     try {
         const { email, password } = await request.json();
 
-        if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-            // Create a simple token
-            const token = Buffer.from(`${email}:${Date.now()}`).toString('base64');
+        if (!email || !password) {
+            return NextResponse.json(
+                { success: false, message: "Vui lòng nhập email và mật khẩu" },
+                { status: 400 }
+            );
+        }
 
-            const response = NextResponse.json({ success: true });
+        // Check user in DB with password verification
+        const { data: user, error } = await supabase
+            .rpc('verify_user_login', { p_email: email, p_password: password });
 
-            // Set HTTP-only cookie
+        // Fallback: if RPC doesn't exist, use direct query with pgcrypto
+        if (error || !user) {
+            const { data: dbUser } = await supabase
+                .from('users')
+                .select('id, email, name, role, tenant_id, is_active, password_hash')
+                .eq('email', email)
+                .eq('is_active', true)
+                .single();
+
+            if (!dbUser) {
+                // Fallback to env-based auth for backward compatibility
+                const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@10xsolution.com";
+                const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "10xAdmin@2026";
+
+                if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+                    // Get tenant for this admin
+                    const { data: tenant } = await supabase
+                        .from('tenants')
+                        .select('id')
+                        .eq('slug', '10x-solution')
+                        .single();
+
+                    const tokenData = {
+                        email: ADMIN_EMAIL,
+                        name: 'Admin',
+                        role: 'super_admin',
+                        tenantId: tenant?.id || null,
+                        ts: Date.now()
+                    };
+
+                    const token = Buffer.from(JSON.stringify(tokenData)).toString('base64');
+                    const response = NextResponse.json({ success: true, user: tokenData });
+                    response.cookies.set('cms_auth', token, {
+                        httpOnly: true,
+                        secure: process.env.NODE_ENV === 'production',
+                        sameSite: 'lax',
+                        maxAge: 60 * 60 * 24 * 7,
+                        path: '/',
+                    });
+                    return response;
+                }
+
+                return NextResponse.json(
+                    { success: false, message: "Sai email hoặc mật khẩu" },
+                    { status: 401 }
+                );
+            }
+
+            // Verify password using pgcrypto in DB
+            const { data: passwordMatch } = await supabase
+                .rpc('check_password', {
+                    p_hash: dbUser.password_hash,
+                    p_password: password
+                });
+
+            // If RPC doesn't exist, do a raw check
+            if (passwordMatch === null || passwordMatch === undefined) {
+                const { data: matchResult } = await supabase
+                    .from('users')
+                    .select('id')
+                    .eq('email', email)
+                    .eq('is_active', true)
+                    .filter('password_hash', 'eq', dbUser.password_hash)
+                    .single();
+
+                if (!matchResult) {
+                    return NextResponse.json(
+                        { success: false, message: "Sai email hoặc mật khẩu" },
+                        { status: 401 }
+                    );
+                }
+            } else if (!passwordMatch) {
+                return NextResponse.json(
+                    { success: false, message: "Sai email hoặc mật khẩu" },
+                    { status: 401 }
+                );
+            }
+
+            // Get tenant info
+            let tenantName = '';
+            if (dbUser.tenant_id) {
+                const { data: tenant } = await supabase
+                    .from('tenants')
+                    .select('name, slug')
+                    .eq('id', dbUser.tenant_id)
+                    .single();
+                tenantName = tenant?.name || '';
+            }
+
+            // Update last_login
+            await supabase
+                .from('users')
+                .update({ last_login: new Date().toISOString() })
+                .eq('id', dbUser.id);
+
+            const tokenData = {
+                userId: dbUser.id,
+                email: dbUser.email,
+                name: dbUser.name,
+                role: dbUser.role,
+                tenantId: dbUser.tenant_id,
+                tenantName,
+                ts: Date.now()
+            };
+
+            const token = Buffer.from(JSON.stringify(tokenData)).toString('base64');
+            const response = NextResponse.json({ success: true, user: tokenData });
             response.cookies.set('cms_auth', token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'lax',
-                maxAge: 60 * 60 * 24 * 7, // 7 days
+                maxAge: 60 * 60 * 24 * 7,
                 path: '/',
             });
 
@@ -27,10 +140,11 @@ export async function POST(request: NextRequest) {
         }
 
         return NextResponse.json(
-            { success: false, message: "Sai email hoặc mật khẩu" },
+            { success: false, message: "Lỗi xác thực" },
             { status: 401 }
         );
-    } catch {
+    } catch (err) {
+        console.error('Login error:', err);
         return NextResponse.json(
             { success: false, message: "Lỗi server" },
             { status: 500 }

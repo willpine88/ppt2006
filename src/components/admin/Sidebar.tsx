@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useAuth } from "@/lib/auth-context";
 import {
     LayoutDashboard,
     FileText,
@@ -19,6 +20,8 @@ import {
     Activity,
     Link2,
     BarChart3,
+    Users,
+    Shield,
 } from "lucide-react";
 
 const menuItems = [
@@ -39,6 +42,12 @@ const menuItems = [
 export default function Sidebar() {
     const pathname = usePathname();
     const [collapsed, setCollapsed] = useState(false);
+    const { user, isSuperAdmin } = useAuth();
+
+    const allMenuItems = [
+        ...menuItems,
+        ...(isSuperAdmin ? [{ label: "Quản lý Tenant", href: "/admin/tenants", icon: Users }] : []),
+    ];
 
     const isActive = (href: string) => {
         if (href === "/admin") return pathname === "/admin";
@@ -72,7 +81,7 @@ export default function Sidebar() {
 
             {/* Navigation */}
             <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-                {menuItems.map((item) => {
+                {allMenuItems.map((item) => {
                     const active = isActive(item.href);
                     return (
                         <Link
@@ -99,8 +108,24 @@ export default function Sidebar() {
                 })}
             </nav>
 
-            {/* Footer */}
+            {/* User Info + Footer */}
             <div className="border-t border-gray-100 p-3 space-y-1 flex-shrink-0">
+                {!collapsed && user && (
+                    <div className="flex items-center gap-3 px-3 py-2.5 mb-1">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                            {user.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
+                            <div className="flex items-center gap-1.5">
+                                {user.role === 'super_admin' && <Shield className="w-3 h-3 text-amber-500" />}
+                                <p className="text-[10px] text-gray-400 truncate">
+                                    {user.tenantName || user.email}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 <button
                     onClick={async () => {
                         await fetch('/api/auth/logout', { method: 'POST' });
