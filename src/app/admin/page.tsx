@@ -21,6 +21,39 @@ import {
     Search,
 } from "lucide-react";
 
+function WeeklyChart({ posts, allPosts }: { posts: Post[]; allPosts: number }) {
+    const days: { label: string; count: number }[] = [];
+    const dayNames = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+
+    for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const dateStr = d.toISOString().slice(0, 10);
+        const count = posts.filter(p => p.created_at.startsWith(dateStr)).length;
+        days.push({ label: dayNames[d.getDay()], count });
+    }
+
+    const max = Math.max(...days.map(d => d.count), 1);
+
+    return (
+        <div className="flex items-end gap-2 h-28">
+            {days.map((day, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
+                    <span className="text-[10px] font-medium text-gray-500">{day.count || ''}</span>
+                    <div
+                        className={`w-full rounded-t-md transition-all duration-500 ${day.count > 0 ? 'bg-emerald-500' : 'bg-gray-100'}`}
+                        style={{
+                            height: `${Math.max(4, (day.count / max) * 80)}px`,
+                            animationDelay: `${i * 80}ms`,
+                        }}
+                    />
+                    <span className="text-[10px] text-gray-400">{day.label}</span>
+                </div>
+            ))}
+        </div>
+    );
+}
+
 export default function AdminDashboard() {
     const [stats, setStats] = useState<DashboardStats>({
         posts: 0, categories: 0, published: 0, drafts: 0,
@@ -29,6 +62,7 @@ export default function AdminDashboard() {
     const [recentPosts, setRecentPosts] = useState<Post[]>([]);
     const [draftPosts, setDraftPosts] = useState<Post[]>([]);
     const [scheduledPosts, setScheduledPosts] = useState<Post[]>([]);
+    const [weeklyPosts, setWeeklyPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
     const [autoPublished, setAutoPublished] = useState<string[]>([]);
 
@@ -66,7 +100,8 @@ export default function AdminDashboard() {
                     { count: lastMonthCount },
                     { data: recent },
                     { data: drafts },
-                    { data: scheduled }
+                    { data: scheduled },
+                    { data: weekly }
                 ] = await Promise.all([
                     supabase.from('posts').select('*', { count: 'exact', head: true }),
                     supabase.from('categories').select('*', { count: 'exact', head: true }),
@@ -77,7 +112,8 @@ export default function AdminDashboard() {
                     supabase.from('posts').select('*', { count: 'exact', head: true }).gte('created_at', lastMonthStart).lte('created_at', lastMonthEnd),
                     supabase.from('posts').select('*').order('created_at', { ascending: false }).limit(5),
                     supabase.from('posts').select('*').eq('is_published', false).or('scheduled_at.is.null,scheduled_at.lte.' + now.toISOString()).order('created_at', { ascending: false }).limit(5),
-                    supabase.from('posts').select('*').eq('is_published', false).not('scheduled_at', 'is', null).gt('scheduled_at', now.toISOString()).order('scheduled_at', { ascending: true }).limit(5)
+                    supabase.from('posts').select('*').eq('is_published', false).not('scheduled_at', 'is', null).gt('scheduled_at', now.toISOString()).order('scheduled_at', { ascending: true }).limit(5),
+                    supabase.from('posts').select('id,created_at').gte('created_at', new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6).toISOString()).is('deleted_at', null)
                 ]);
 
                 let imagesCount = 0;
@@ -100,6 +136,7 @@ export default function AdminDashboard() {
                 setRecentPosts((recent || []) as Post[]);
                 setDraftPosts((drafts || []) as Post[]);
                 setScheduledPosts((scheduled || []) as Post[]);
+                setWeeklyPosts((weekly || []) as Post[]);
             } catch (error) {
                 console.error('Error:', error);
             } finally {
@@ -230,6 +267,53 @@ export default function AdminDashboard() {
                         <p className="text-xs text-gray-400 mt-1">{stat.sub}</p>
                     </div>
                 ))}
+            </div>
+
+            {/* Activity Chart + Export */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-semibold text-gray-900">Hoạt động 7 ngày qua</h3>
+                        <span className="text-xs text-gray-400">Bài viết mới mỗi ngày</span>
+                    </div>
+                    {loading ? (
+                        <div className="h-32 bg-gray-50 rounded-xl animate-pulse" />
+                    ) : (
+                        <WeeklyChart posts={weeklyPosts} allPosts={stats.posts} />
+                    )}
+                </div>
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 className="font-semibold text-gray-900 mb-1">Xuất dữ liệu</h3>
+                        <p className="text-xs text-gray-400 mb-4">Tải xuống danh sách bài viết dưới dạng CSV</p>
+                    </div>
+                    <button
+                        onClick={async () => {
+                            const { data } = await supabase.from('posts').select('title,slug,is_published,created_at,published_at,scheduled_at,tags,category_id').is('deleted_at', null).order('created_at', { ascending: false });
+                            if (!data || data.length === 0) { alert('Không có dữ liệu'); return; }
+                            const header = 'Tiêu đề,Slug,Trạng thái,Ngày tạo,Ngày xuất bản,Lên lịch,Tags';
+                            const rows = data.map((p: any) => [
+                                `"${p.title.replace(/"/g, '""')}"`,
+                                p.slug,
+                                p.is_published ? 'Xuất bản' : (p.scheduled_at ? 'Lên lịch' : 'Nháp'),
+                                new Date(p.created_at).toLocaleDateString('vi-VN'),
+                                p.published_at ? new Date(p.published_at).toLocaleDateString('vi-VN') : '',
+                                p.scheduled_at ? new Date(p.scheduled_at).toLocaleDateString('vi-VN') : '',
+                                (p.tags || []).join('; ')
+                            ].join(','));
+                            const csv = '\uFEFF' + [header, ...rows].join('\n');
+                            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                            const link = document.createElement('a');
+                            link.href = URL.createObjectURL(blob);
+                            link.download = `posts_${new Date().toISOString().slice(0, 10)}.csv`;
+                            link.click();
+                        }}
+                        className="w-full py-2.5 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors flex items-center justify-center gap-2"
+                    >
+                        <BarChart3 className="w-4 h-4" />
+                        Export CSV
+                    </button>
+                </div>
             </div>
 
             {/* Content Grid */}
