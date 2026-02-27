@@ -10,7 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        serif: ['Playfair Display', 'Georgia', 'serif'],
+        serif: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
         nostalgia: {
