@@ -10,8 +10,18 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['Playfair Display', 'Georgia', 'serif'],
       },
       colors: {
+        nostalgia: {
+          primary: '#B8860B',
+          secondary: '#722F37',
+          bg: '#FDF6E3',
+          text: '#3E2723',
+          accent: '#D4A574',
+          gold: '#DAA520',
+          cream: '#FFF8DC',
+        },
         brand: {
           50: '#f0fdf4',
           100: '#dcfce7',
