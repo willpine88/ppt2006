@@ -14,12 +14,15 @@ const config: Config = {
       },
       colors: {
         nostalgia: {
-          primary: '#B8860B',
-          secondary: '#722F37',
-          bg: '#FDF6E3',
-          text: '#3E2723',
-          accent: '#D4A574',
-          gold: '#DAA520',
+          bg: '#1A0F0A',
+          'bg-light': '#2A1F1A',
+          text: '#F5E6D3',
+          primary: '#D4A574',
+          secondary: '#DAA520',
+          accent: '#B8860B',
+          muted: '#8B7355',
+          card: '#241A14',
+          border: '#3D2E23',
           cream: '#FFF8DC',
         },
         brand: {
@@ -40,6 +43,8 @@ const config: Config = {
         'fade-in-up': 'fadeInUp 0.4s ease-out',
         'slide-in-right': 'slideInRight 0.3s ease-out',
         'scale-in': 'scaleIn 0.2s ease-out',
+        'glow-pulse': 'glowPulse 3s ease-in-out infinite',
+        'marquee': 'marquee 20s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -57,6 +62,14 @@ const config: Config = {
         scaleIn: {
           '0%': { opacity: '0', transform: 'scale(0.95)' },
           '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        glowPulse: {
+          '0%, 100%': { opacity: '0.4' },
+          '50%': { opacity: '0.8' },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
         },
       },
     },

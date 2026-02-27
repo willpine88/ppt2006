@@ -55,10 +55,10 @@ export function GuestbookSection() {
 
   return (
     <section>
-      <h2 className="font-serif text-2xl font-bold text-nostalgia-secondary mb-6 text-center">
+      <h2 className="font-serif text-2xl md:text-3xl font-bold text-nostalgia-cream mb-3 text-center">
         Sổ Lưu Bút Online
       </h2>
-      <p className="text-center text-nostalgia-text/60 text-sm mb-8">
+      <p className="text-center text-nostalgia-text/40 text-sm mb-10">
         Viết vài dòng gửi bạn cũ, thầy cô nhé! (Lời nhắn sẽ hiển thị sau khi
         được BTC duyệt)
       </p>
@@ -66,16 +66,16 @@ export function GuestbookSection() {
       {/* Form */}
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded-xl p-6 border border-nostalgia-accent/20 mb-10 max-w-lg mx-auto"
+        className="bg-nostalgia-card rounded-xl p-6 border border-nostalgia-border/60 mb-10 max-w-lg mx-auto"
       >
         {sent && (
-          <div className="bg-green-50 text-green-700 text-sm rounded-lg p-3 mb-4">
+          <div className="bg-nostalgia-accent/10 text-nostalgia-primary text-sm rounded-lg p-3 mb-4 border border-nostalgia-accent/20">
             Gửi thành công! Lời nhắn sẽ hiển thị sau khi được duyệt.
           </div>
         )}
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-nostalgia-text/70 mb-1">
+            <label className="block text-sm font-medium text-nostalgia-text/50 mb-1">
               Họ tên *
             </label>
             <input
@@ -83,17 +83,17 @@ export function GuestbookSection() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full border border-nostalgia-accent/30 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-nostalgia-primary/30"
+              className="w-full bg-nostalgia-bg border border-nostalgia-border rounded-lg px-3 py-2.5 text-sm text-nostalgia-text focus:outline-none focus:ring-2 focus:ring-nostalgia-primary/30 focus:border-nostalgia-primary/40"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-nostalgia-text/70 mb-1">
+            <label className="block text-sm font-medium text-nostalgia-text/50 mb-1">
               Lớp
             </label>
             <select
               value={className}
               onChange={(e) => setClassName(e.target.value)}
-              className="w-full border border-nostalgia-accent/30 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-nostalgia-primary/30"
+              className="w-full bg-nostalgia-bg border border-nostalgia-border rounded-lg px-3 py-2.5 text-sm text-nostalgia-text focus:outline-none focus:ring-2 focus:ring-nostalgia-primary/30 focus:border-nostalgia-primary/40"
             >
               <option value="">-- Chọn lớp --</option>
               {["12A1", "12A2", "12A3", "12A4", "12A5", "12A6", "12A7"].map(
@@ -104,7 +104,7 @@ export function GuestbookSection() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-nostalgia-text/70 mb-1">
+            <label className="block text-sm font-medium text-nostalgia-text/50 mb-1">
               Lời nhắn *
             </label>
             <textarea
@@ -112,13 +112,13 @@ export function GuestbookSection() {
               onChange={(e) => setMessage(e.target.value)}
               required
               rows={4}
-              className="w-full border border-nostalgia-accent/30 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-nostalgia-primary/30 resize-none"
+              className="w-full bg-nostalgia-bg border border-nostalgia-border rounded-lg px-3 py-2.5 text-sm text-nostalgia-text focus:outline-none focus:ring-2 focus:ring-nostalgia-primary/30 focus:border-nostalgia-primary/40 resize-none"
             />
           </div>
           <button
             type="submit"
             disabled={sending}
-            className="w-full bg-nostalgia-primary text-white rounded-lg py-2.5 text-sm font-semibold hover:bg-nostalgia-primary/90 disabled:opacity-50 transition-colors"
+            className="w-full bg-gradient-to-r from-nostalgia-primary to-nostalgia-secondary text-nostalgia-bg rounded-full py-3 text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity"
           >
             {sending ? "Đang gửi..." : "Gửi lời nhắn"}
           </button>
@@ -127,17 +127,17 @@ export function GuestbookSection() {
 
       {/* Entries */}
       {entries.length > 0 && (
-        <div className="space-y-4 max-w-2xl mx-auto">
+        <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
           {entries.map((entry) => (
             <div
               key={entry.id}
-              className="bg-white rounded-xl p-5 border border-nostalgia-accent/15"
+              className="bg-nostalgia-card rounded-xl p-5 border border-nostalgia-border/60"
             >
-              <p className="text-sm text-nostalgia-text/80 leading-relaxed italic">
+              <p className="text-sm text-nostalgia-text/60 leading-relaxed italic">
                 &ldquo;{entry.message}&rdquo;
               </p>
-              <div className="mt-3 flex items-center gap-2 text-xs text-nostalgia-text/50">
-                <span className="font-semibold text-nostalgia-secondary">
+              <div className="mt-4 flex items-center gap-2 text-xs text-nostalgia-text/30">
+                <span className="font-semibold text-nostalgia-primary">
                   {entry.author_name}
                 </span>
                 {entry.class_name && <span>— {entry.class_name}</span>}

@@ -25,13 +25,23 @@ function calcTimeLeft(): TimeLeft {
 function TimeBox({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center">
-      <span className="text-4xl md:text-6xl font-serif font-bold text-nostalgia-primary">
-        {String(value).padStart(2, "0")}
-      </span>
-      <span className="text-xs md:text-sm text-nostalgia-text/60 mt-1 uppercase tracking-wider">
+      <div className="relative">
+        <span className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold bg-gradient-to-b from-nostalgia-primary via-nostalgia-secondary to-nostalgia-accent bg-clip-text text-transparent drop-shadow-lg">
+          {String(value).padStart(2, "0")}
+        </span>
+      </div>
+      <span className="text-[10px] md:text-xs text-nostalgia-muted mt-2 uppercase tracking-[0.2em]">
         {label}
       </span>
     </div>
+  );
+}
+
+function Separator() {
+  return (
+    <span className="text-3xl md:text-5xl lg:text-6xl font-serif text-nostalgia-accent/40 self-start mt-1 md:mt-2">
+      :
+    </span>
   );
 }
 
@@ -46,7 +56,7 @@ export function CountdownTimer() {
 
   if (!time) {
     return (
-      <div className="flex gap-6 md:gap-10 justify-center py-4">
+      <div className="flex gap-4 md:gap-8 justify-center py-4">
         {["Ngày", "Giờ", "Phút", "Giây"].map((l) => (
           <TimeBox key={l} value={0} label={l} />
         ))}
@@ -55,13 +65,13 @@ export function CountdownTimer() {
   }
 
   return (
-    <div className="flex gap-6 md:gap-10 justify-center py-4">
+    <div className="flex gap-4 md:gap-6 lg:gap-8 justify-center items-start py-4">
       <TimeBox value={time.days} label="Ngày" />
-      <span className="text-4xl md:text-6xl font-serif text-nostalgia-accent self-start">:</span>
+      <Separator />
       <TimeBox value={time.hours} label="Giờ" />
-      <span className="text-4xl md:text-6xl font-serif text-nostalgia-accent self-start">:</span>
+      <Separator />
       <TimeBox value={time.minutes} label="Phút" />
-      <span className="text-4xl md:text-6xl font-serif text-nostalgia-accent self-start">:</span>
+      <Separator />
       <TimeBox value={time.seconds} label="Giây" />
     </div>
   );

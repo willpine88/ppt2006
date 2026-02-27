@@ -11,11 +11,14 @@ export default async function NewsPage() {
   const posts = await getReunionPosts();
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-16">
-      <h1 className="font-serif text-4xl font-bold text-nostalgia-secondary mb-2 text-center">
+    <div className="max-w-4xl mx-auto px-4 py-20 md:py-28">
+      <span className="inline-block text-[10px] uppercase tracking-[0.3em] text-nostalgia-muted mb-4 border border-nostalgia-border rounded-full px-3 py-1">
+        Tin tức
+      </span>
+      <h1 className="font-serif text-4xl md:text-6xl font-bold text-nostalgia-cream mb-2">
         Tin Tức
       </h1>
-      <p className="text-center text-nostalgia-text/60 mb-10">
+      <p className="text-nostalgia-text/40 mb-10">
         Cập nhật mới nhất về hội khoá
       </p>
 
@@ -25,7 +28,7 @@ export default async function NewsPage() {
             <Link
               key={post.id}
               href={`/tin-tuc/${post.slug}`}
-              className="group block bg-white rounded-xl overflow-hidden shadow-sm border border-nostalgia-accent/15 hover:shadow-md transition-all"
+              className="group block bg-nostalgia-card rounded-xl overflow-hidden border border-nostalgia-border/60 hover:border-nostalgia-primary/30 transition-all"
             >
               <div className="flex flex-col sm:flex-row">
                 {post.featured_image && (
@@ -39,15 +42,15 @@ export default async function NewsPage() {
                   </div>
                 )}
                 <div className="p-5">
-                  <h2 className="font-serif text-lg font-bold text-nostalgia-secondary group-hover:text-nostalgia-primary transition-colors">
+                  <h2 className="font-serif text-lg font-bold text-nostalgia-cream group-hover:text-nostalgia-primary transition-colors">
                     {post.title}
                   </h2>
                   {post.excerpt && (
-                    <p className="text-sm text-nostalgia-text/60 mt-2 line-clamp-2">
+                    <p className="text-sm text-nostalgia-text/40 mt-2 line-clamp-2">
                       {post.excerpt}
                     </p>
                   )}
-                  <p className="text-xs text-nostalgia-text/40 mt-3">
+                  <p className="text-xs text-nostalgia-muted mt-3">
                     {new Date(post.created_at).toLocaleDateString("vi-VN")}
                   </p>
                 </div>
@@ -56,11 +59,11 @@ export default async function NewsPage() {
           ))}
         </div>
       ) : (
-        <div className="bg-nostalgia-accent/5 rounded-xl p-10 text-center border border-nostalgia-accent/15">
-          <p className="font-serif text-xl text-nostalgia-secondary mb-2">
+        <div className="bg-nostalgia-card rounded-xl p-12 text-center border border-nostalgia-border/60">
+          <p className="font-serif text-xl text-nostalgia-cream mb-2">
             Chưa có tin tức
           </p>
-          <p className="text-sm text-nostalgia-text/60">
+          <p className="text-sm text-nostalgia-text/40">
             Tin tức về hội khoá sẽ được cập nhật sớm. Hãy quay lại sau nhé!
           </p>
         </div>

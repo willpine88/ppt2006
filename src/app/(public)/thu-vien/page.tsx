@@ -13,23 +13,26 @@ export default async function GalleryPage() {
   ]);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-16">
-      <h1 className="font-serif text-4xl font-bold text-nostalgia-secondary mb-2 text-center">
+    <div className="max-w-6xl mx-auto px-4 py-20 md:py-28">
+      <span className="inline-block text-[10px] uppercase tracking-[0.3em] text-nostalgia-muted mb-4 border border-nostalgia-border rounded-full px-3 py-1">
+        Thư viện
+      </span>
+      <h1 className="font-serif text-4xl md:text-6xl font-bold text-nostalgia-cream mb-2">
         Thư Viện Ảnh
       </h1>
-      <p className="text-center text-nostalgia-text/60 mb-10">
+      <p className="text-nostalgia-text/40 mb-10">
         Những khoảnh khắc đáng nhớ từ thời đi học đến hiện tại
       </p>
 
       {/* Filter by class */}
-      <div className="flex flex-wrap gap-2 justify-center mb-10">
-        <span className="px-4 py-2 rounded-full text-sm font-semibold bg-nostalgia-primary text-white">
+      <div className="flex flex-wrap gap-2 mb-10">
+        <span className="px-4 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-nostalgia-primary to-nostalgia-secondary text-nostalgia-bg">
           Tất cả
         </span>
         {classes.map((c: { slug: string; name: string }) => (
           <span
             key={c.slug}
-            className="px-4 py-2 rounded-full text-sm font-semibold bg-white border border-nostalgia-accent/30 text-nostalgia-text/70"
+            className="px-4 py-2 rounded-full text-sm font-semibold bg-nostalgia-card border border-nostalgia-border/60 text-nostalgia-text/50"
           >
             {c.name}
           </span>
@@ -41,7 +44,7 @@ export default async function GalleryPage() {
           {images.map((img: { id: string; image_url: string; caption?: string; year?: string }) => (
             <div
               key={img.id}
-              className="break-inside-avoid bg-white rounded-xl overflow-hidden shadow-sm border border-nostalgia-accent/15"
+              className="break-inside-avoid bg-nostalgia-card rounded-xl overflow-hidden border border-nostalgia-border/60"
             >
               <img
                 src={img.image_url}
@@ -52,10 +55,10 @@ export default async function GalleryPage() {
               {(img.caption || img.year) && (
                 <div className="p-3">
                   {img.caption && (
-                    <p className="text-sm text-nostalgia-text/70">{img.caption}</p>
+                    <p className="text-sm text-nostalgia-text/50">{img.caption}</p>
                   )}
                   {img.year && (
-                    <p className="text-xs text-nostalgia-text/50 mt-1">{img.year}</p>
+                    <p className="text-xs text-nostalgia-muted mt-1">{img.year}</p>
                   )}
                 </div>
               )}
@@ -63,11 +66,11 @@ export default async function GalleryPage() {
           ))}
         </div>
       ) : (
-        <div className="bg-nostalgia-accent/5 rounded-xl p-10 text-center border border-nostalgia-accent/15">
-          <p className="font-serif text-xl text-nostalgia-secondary mb-2">
+        <div className="bg-nostalgia-card rounded-xl p-12 text-center border border-nostalgia-border/60">
+          <p className="font-serif text-xl text-nostalgia-cream mb-2">
             Chưa có ảnh nào
           </p>
-          <p className="text-sm text-nostalgia-text/60">
+          <p className="text-sm text-nostalgia-text/40">
             Thư viện ảnh đang được xây dựng. Hãy gửi ảnh kỷ niệm cho BTC để
             cùng nhau lưu giữ kỷ niệm nhé!
           </p>
