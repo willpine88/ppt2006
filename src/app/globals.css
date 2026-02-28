@@ -154,6 +154,51 @@ body {
   to { opacity: 1; transform: translateX(0); }
 }
 
+/* ==================== SCHOOL SCENE ==================== */
+@keyframes petalFall {
+  0% { opacity: 0; transform: translateY(-20px) rotate(0deg); }
+  10% { opacity: 1; }
+  90% { opacity: 0.6; }
+  100% { opacity: 0; transform: translateY(480px) rotate(360deg) translateX(40px); }
+}
+
+@keyframes walkRight {
+  0% { right: 80%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { right: 30%; opacity: 0.6; }
+}
+
+@keyframes walkLeft {
+  0% { left: 80%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 35%; opacity: 0.6; }
+}
+
+@keyframes bikeRide {
+  0% { left: -10%; opacity: 0; }
+  10% { opacity: 0.2; }
+  90% { opacity: 0.2; }
+  100% { left: 40%; opacity: 0; }
+}
+
+.animate-petal-fall {
+  animation: petalFall linear infinite;
+}
+
+.animate-walk-right {
+  animation: walkRight 12s ease-in-out infinite;
+}
+
+.animate-walk-left {
+  animation: walkLeft 14s ease-in-out 2s infinite;
+}
+
+.animate-bike {
+  animation: bikeRide 16s ease-in-out 4s infinite;
+}
+
 /* ==================== UTILITIES ==================== */
 .line-clamp-1 {
   display: -webkit-box;

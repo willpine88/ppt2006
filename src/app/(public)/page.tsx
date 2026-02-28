@@ -1,15 +1,19 @@
 import Link from "next/link";
 import { CountdownTimer } from "@/components/public/countdown-timer";
 import { GuestbookSection } from "@/components/public/guestbook-section";
+import { SchoolSceneAnimation } from "@/components/public/school-scene-animation";
 
 export default function LandingPage() {
   return (
     <>
+      {/* Animated school scene */}
+      <SchoolSceneAnimation />
+
       {/* Hero */}
-      <section className="relative py-24 md:py-36 lg:py-44 text-center px-4 overflow-hidden">
+      <section className="relative py-16 md:py-24 lg:py-32 text-center px-4 overflow-hidden -mt-8">
         {/* Gradient background layers */}
-        <div className="absolute inset-0 bg-gradient-to-b from-nostalgia-card via-nostalgia-bg to-nostalgia-bg" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-nostalgia-primary/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-nostalgia-bg to-nostalgia-bg" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-nostalgia-primary/5 via-transparent to-transparent" />
 
         <div className="relative max-w-5xl mx-auto">
           <span className="inline-block text-[10px] md:text-xs uppercase tracking-[0.4em] text-nostalgia-muted mb-6 border border-nostalgia-border rounded-full px-4 py-1.5">
