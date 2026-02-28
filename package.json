@@ -8,7 +8,7 @@
     "build": "vinext build",
     "start": "vinext start",
     "lint": "vinext lint",
-    "deploy": "vinext deploy"
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",
