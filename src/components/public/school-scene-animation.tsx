@@ -52,27 +52,55 @@ export function SchoolSceneAnimation() {
         <circle cx="75" cy="95" r="3" fill="#FF6347" opacity="0.7" />
       </svg>
 
-      {/* School gate (center) */}
+      {/* School gate (center) — open Vietnamese school entrance */}
       <svg className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[260px] sm:w-[320px] md:w-[400px] h-[200px] sm:h-[240px] md:h-[300px]" viewBox="0 0 400 300" fill="none">
-        <rect x="60" y="60" width="30" height="240" fill="#3D2E23" />
-        <rect x="55" y="50" width="40" height="15" fill="#5C3D2E" rx="2" />
-        <rect x="55" y="290" width="40" height="10" fill="#5C3D2E" />
-        <rect x="310" y="60" width="30" height="240" fill="#3D2E23" />
-        <rect x="305" y="50" width="40" height="15" fill="#5C3D2E" rx="2" />
-        <rect x="305" y="290" width="40" height="10" fill="#5C3D2E" />
-        <path d="M55 55 Q200 -10 345 55" stroke="#5C3D2E" strokeWidth="8" fill="none" />
-        <rect x="130" y="15" width="140" height="30" rx="4" fill="#3D2E23" />
-        <text x="200" y="36" textAnchor="middle" fill="#D4A574" fontSize="11" fontWeight="bold" fontFamily="Inter, sans-serif">THPT PHAM PHU THU</text>
-        <line x1="95" y1="100" x2="95" y2="300" stroke="#5C3D2E" strokeWidth="3" opacity="0.5" />
-        <line x1="120" y1="80" x2="120" y2="300" stroke="#5C3D2E" strokeWidth="3" opacity="0.5" />
-        <line x1="145" y1="70" x2="145" y2="300" stroke="#5C3D2E" strokeWidth="3" opacity="0.5" />
-        <line x1="170" y1="65" x2="170" y2="300" stroke="#5C3D2E" strokeWidth="3" opacity="0.5" />
-        <line x1="200" y1="62" x2="200" y2="300" stroke="#5C3D2E" strokeWidth="3" opacity="0.5" />
-        <line x1="230" y1="65" x2="230" y2="300" stroke="#5C3D2E" strokeWidth="3" opacity="0.5" />
-        <line x1="255" y1="70" x2="255" y2="300" stroke="#5C3D2E" strokeWidth="3" opacity="0.5" />
-        <line x1="280" y1="80" x2="280" y2="300" stroke="#5C3D2E" strokeWidth="3" opacity="0.5" />
-        <line x1="305" y1="100" x2="305" y2="300" stroke="#5C3D2E" strokeWidth="3" opacity="0.5" />
-        <line x1="90" y1="180" x2="310" y2="180" stroke="#5C3D2E" strokeWidth="3" opacity="0.4" />
+        {/* Left pillar — wide, painted, with cap */}
+        <rect x="55" y="70" width="35" height="230" fill="#C4A882" />
+        <rect x="55" y="70" width="35" height="230" fill="url(#pillarGrad)" />
+        <rect x="50" y="60" width="45" height="14" fill="#D4B896" rx="2" />
+        <rect x="48" y="54" width="49" height="10" fill="#B8A080" rx="2" />
+        {/* Pillar decorative line */}
+        <rect x="62" y="90" width="21" height="200" fill="#B8A080" opacity="0.3" rx="1" />
+
+        {/* Right pillar */}
+        <rect x="310" y="70" width="35" height="230" fill="#C4A882" />
+        <rect x="310" y="70" width="35" height="230" fill="url(#pillarGrad)" />
+        <rect x="305" y="60" width="45" height="14" fill="#D4B896" rx="2" />
+        <rect x="303" y="54" width="49" height="10" fill="#B8A080" rx="2" />
+        <rect x="317" y="90" width="21" height="200" fill="#B8A080" opacity="0.3" rx="1" />
+
+        {/* Arch beam connecting pillars */}
+        <rect x="50" y="40" width="300" height="18" fill="#B8A080" rx="3" />
+        <rect x="55" y="36" width="290" height="8" fill="#C4A882" rx="2" />
+
+        {/* School name board */}
+        <rect x="110" y="5" width="180" height="32" rx="4" fill="#8B2500" />
+        <rect x="112" y="7" width="176" height="28" rx="3" fill="#A03020" />
+        <text x="200" y="27" textAnchor="middle" fill="#FFF8DC" fontSize="12" fontWeight="bold" fontFamily="Inter, sans-serif">THPT PHAM PHU THU</text>
+
+        {/* Star emblem on top */}
+        <polygon points="200,0 203,8 212,8 205,13 208,22 200,17 192,22 195,13 188,8 197,8" fill="#DAA520" opacity="0.7" />
+
+        {/* Low wall extending left */}
+        <rect x="0" y="230" width="55" height="70" fill="#C4A882" />
+        <rect x="0" y="225" width="55" height="8" fill="#D4B896" rx="1" />
+
+        {/* Low wall extending right */}
+        <rect x="345" y="230" width="55" height="70" fill="#C4A882" />
+        <rect x="345" y="225" width="55" height="8" fill="#D4B896" rx="1" />
+
+        {/* Open gateway (no bars — welcoming entrance) */}
+        {/* Path/walkway through the gate */}
+        <path d="M120 300 L160 200 L240 200 L280 300" fill="#8B7355" opacity="0.15" />
+
+        {/* Gradient for pillars */}
+        <defs>
+          <linearGradient id="pillarGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#000" stopOpacity="0.08" />
+            <stop offset="50%" stopColor="#fff" stopOpacity="0.05" />
+            <stop offset="100%" stopColor="#000" stopOpacity="0.08" />
+          </linearGradient>
+        </defs>
       </svg>
 
       {/* Ground */}
