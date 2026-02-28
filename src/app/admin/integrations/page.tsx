@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import {
     BarChart3, Search, Globe, CheckCircle2, XCircle,
     Save, Loader2, Check, ExternalLink, Copy, Info,
-    AlertTriangle, Code2, Eye, EyeOff,
+    AlertTriangle, Code2,
 } from "lucide-react";
 
 interface IntegrationSettings {

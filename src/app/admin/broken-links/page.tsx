@@ -2,11 +2,10 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
-import { Post } from "@/lib/types";
 import {
     Link2, ExternalLink, ArrowUpRight, ArrowDownLeft,
     Search, Loader2, RefreshCw, CheckCircle2, XCircle,
-    AlertTriangle, Globe, FileText, Filter, ChevronDown,
+    AlertTriangle, Globe, FileText,
 } from "lucide-react";
 
 interface LinkEntry {
@@ -173,7 +172,7 @@ export default function BrokenLinksPage() {
     const outboundCount = links.filter(l => l.type === 'outbound').length;
     const inboundCount = links.filter(l => l.type === 'inbound').length;
     const brokenCount = links.filter(l => l.status === 'broken').length;
-    const redirectCount = links.filter(l => l.status === 'redirect').length;
+
     const okCount = links.filter(l => l.status === 'ok').length;
     const externalCount = links.filter(l => l.isExternal).length;
     const internalCount = links.filter(l => !l.isExternal).length;

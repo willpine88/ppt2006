@@ -94,9 +94,7 @@ export default function EditPostPage() {
     const params = useParams();
     const postId = params.id as string;
     const [loading, setLoading] = useState(true);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [saving, setSaving] = useState(false);
-    const [uploading, setUploading] = useState(false);
     const [unsavedChanges, setUnsavedChanges] = useState(false);
     const [showMediaLibrary, setShowMediaLibrary] = useState(false);
     const [categories, setCategories] = useState<{ slug: string; name: string }[]>([]);
@@ -158,11 +156,9 @@ export default function EditPostPage() {
     const handleFeaturedImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]; if (!file) return;
         if (file.size > 5 * 1024 * 1024) { alert("Ảnh tối đa 5MB!"); return; }
-        setUploading(true);
-        const url = await uploadImage(file, 'post-images');
+                const url = await uploadImage(file, 'post-images');
         if (url) updateForm({ featuredImage: url });
-        setUploading(false);
-    };
+            };
 
     const handleBack = () => { if (unsavedChanges && !confirm("Thoát mà không lưu?")) return; router.push('/admin/posts'); };
 

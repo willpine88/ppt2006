@@ -22,7 +22,7 @@ import {
     Search,
 } from "lucide-react";
 
-function WeeklyChart({ posts, allPosts }: { posts: Post[]; allPosts: number }) {
+function WeeklyChart({ posts }: { posts: Post[] }) {
     const days: { label: string; count: number }[] = [];
     const dayNames = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 
@@ -284,7 +284,7 @@ export default function AdminDashboard() {
                     {loading ? (
                         <div className="h-32 bg-gray-50 rounded-xl animate-pulse" />
                     ) : (
-                        <WeeklyChart posts={weeklyPosts} allPosts={stats.posts} />
+                        <WeeklyChart posts={weeklyPosts} />
                     )}
                 </div>
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between">

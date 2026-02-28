@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { tenantQuery, withTenantId } from "@/lib/tenant-filter";
 import { Category } from "@/lib/types";
-import { Plus, Edit3, Trash2, FolderOpen, Loader2, X, Check } from "lucide-react";
+import { Plus, Edit3, Trash2, FolderOpen, Loader2, Check } from "lucide-react";
 
 export default function CategoriesPage() {
     const [categories, setCategories] = useState<Category[]>([]);
